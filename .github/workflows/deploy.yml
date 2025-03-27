@@ -1,24 +1,22 @@
 name: Deploy Database Migrations
-
 on:
   push:
     branches:
-      - main  # Triggers only when pushing to main branch
-
+      - main
 jobs:
   migrate:
-    runs-on: ubuntu-latest  # GitHub-hosted runner
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
-
+        uses: actions/checkout@v4
+      
       - name: Install Flyway
         run: |
-          curl -O https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/10.0.0/flyway-commandline-10.0.0-linux-x64.tar.gz
-          tar -xvzf flyway-commandline-10.0.0-linux-x64.tar.gz
-          sudo mv flyway-10.0.0 /usr/local/flyway
+          curl -O https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/11.5.0/flyway-commandline-11.5.0-linux-x64.tar.gz
+          tar -xvzf flyway-commandline-11.5.0-linux-x64.tar.gz
+          sudo mv flyway-11.5.0 /usr/local/flyway
           echo "/usr/local/flyway" >> $GITHUB_PATH
-
+      
       - name: Run Flyway Migrations on Production
         env:
           FLYWAY_URL: jdbc:postgresql://${{ secrets.DB_HOST }}:5432/${{ secrets.DB_NAME }}
