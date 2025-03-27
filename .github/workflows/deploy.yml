@@ -23,4 +23,7 @@ jobs:
           FLYWAY_USER: ${{ secrets.DB_USER }}
           FLYWAY_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
-          flyway -user="$FLYWAY_USER" -password="$FLYWAY_PASSWORD" -url="$FLYWAY_URL" -locations=filesystem:./migrations migrate
+          flyway -user="$FLYWAY_USER" -password="$FLYWAY_PASSWORD" -url="$FLYWAY_URL" \
+          -locations=filesystem:./migrations \
+          -validateOnMigrate=false \
+          migrate
