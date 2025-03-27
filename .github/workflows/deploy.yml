@@ -26,4 +26,5 @@ jobs:
           flyway -user="$FLYWAY_USER" -password="$FLYWAY_PASSWORD" -url="$FLYWAY_URL" \
           -locations=filesystem:./migrations \
           -validateOnMigrate=false \
-          migrate
+          -outOfOrder=true \
+          clean migrate
