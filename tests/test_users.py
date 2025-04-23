@@ -16,5 +16,5 @@ def test_create_user():
 
     print(response.json())
     new_user = UserOut(**response.json())
-    assert new_user == "hello123@gmail.com"
+    assert new_user.email == "hello123@gmail.com"
     assert response.status_code == 201
