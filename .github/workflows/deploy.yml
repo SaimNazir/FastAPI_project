@@ -2,21 +2,15 @@ name: Build and deploy
 
 on: [push, pull_request]
 
-jobs:
-  debug-secrets:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Debug GitHub Secrets (safe values only)
-        run: |
-          echo "USERNAME: ${{ secrets.DATABASE_USERNAME }}"
-          echo "DB NAME: ${{ secrets.DATABASE_NAME }}"
-          echo "PASSWORD length: ${#DATABASE_PASSWORD}"
-        env:
-          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
 
+
+
+
+jobs:
   build:
-    needs: debug-secrets
     runs-on: ubuntu-latest
+
+
     env:
       DATABASE_HOSTNAME: ${{ secrets.DATABASE_HOSTNAME }}
       DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
@@ -27,6 +21,7 @@ jobs:
       ALGORITHM: ${{ secrets.ALGORITHM }}
       ACCESS_TOKEN_EXPIRE_MINUTES: 30
 
+# test db on runner to pass tests
     services:
       postgres:
         image: postgres:latest
@@ -36,24 +31,27 @@ jobs:
           POSTGRES_USER: ${{ secrets.DATABASE_USERNAME }}
           POSTGRES_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
           POSTGRES_DB: ${{ secrets.DATABASE_NAME }}
+
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
 
+
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Install Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
-      - name: Update pip
-        run: python -m pip install --upgrade pip
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-      - name: Test with pytest
-        run: |
-          pip install pytest
-          pytest
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Install Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+    - name: Update pip
+      run: python -m pip install --upgrade pip
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+    - name: Test with pytest
+      run: |
+        pip install pytest
+        pytest

@@ -1,0 +1,16 @@
+name: Debug GitHub Secrets
+
+on:
+  workflow_dispatch:  # Lets you trigger this manually from the Actions tab
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if secrets are being resolved
+        run: |
+          echo "✅ DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}"
+          echo "✅ DATABASE_NAME: ${{ secrets.DATABASE_NAME }}"
+          echo "🔒 DATABASE_PASSWORD length: ${#DATABASE_PASSWORD}"
+        env:
+          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
